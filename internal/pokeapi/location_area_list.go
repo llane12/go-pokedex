@@ -12,24 +12,30 @@ func (c *Client) ListLocationAreas(pageURL *string) (LocationAreaResponse, error
 		url = *pageURL
 	}
 
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return LocationAreaResponse{}, err
-	}
+	dat, found := c.cache.Get(url)
+	if !found {
+		req, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			return LocationAreaResponse{}, err
+		}
 
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return LocationAreaResponse{}, err
-	}
-	defer resp.Body.Close()
+		resp, err := c.httpClient.Do(req)
+		if err != nil {
+			return LocationAreaResponse{}, err
+		}
+		defer resp.Body.Close()
 
-	dat, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return LocationAreaResponse{}, err
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return LocationAreaResponse{}, err
+		}
+
+		c.cache.Add(url, body)
+		dat = body
 	}
 
 	locationAreaResp := LocationAreaResponse{}
-	err = json.Unmarshal(dat, &locationAreaResp)
+	err := json.Unmarshal(dat, &locationAreaResp)
 	if err != nil {
 		return LocationAreaResponse{}, err
 	}
