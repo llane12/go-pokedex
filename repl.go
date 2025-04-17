@@ -8,6 +8,8 @@ import (
 )
 
 func startRepl() {
+	commands := getCommands()
+
 	reader := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")
@@ -18,7 +20,18 @@ func startRepl() {
 			continue
 		}
 
-		fmt.Printf("Your command was: %s\n", words[0])
+		commandName := words[0]
+
+		cmd, ok := commands[commandName]
+		if !ok {
+			fmt.Println("Unknown command: ", commandName)
+			continue
+		}
+
+		err := cmd.callback()
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 }
 
