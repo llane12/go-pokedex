@@ -28,6 +28,10 @@ func startRepl(cfg *config) {
 			continue
 		}
 
+		if len(words) > 1 {
+			cfg.arguments = words[1:]
+		}
+
 		err := cmd.callback(cfg)
 		if err != nil {
 			fmt.Println(err)

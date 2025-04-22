@@ -16,6 +16,7 @@ type config struct {
 	pokeapiClient pokeapi.Client
 	nextPageURL   *string
 	prevPageURL   *string
+	arguments     []string
 }
 
 func getCommands() map[string]cliCommand {
@@ -40,6 +41,11 @@ func getCommands() map[string]cliCommand {
 			description: "Gets the previous 20 location areas",
 			callback:    commandMapB,
 		},
+		"explore": {
+			name:        "explore <location_name>",
+			description: "Lists the Pokemon that can be enocuntered in a location area",
+			callback:    commandExplore,
+		},
 	}
 }
 
@@ -54,8 +60,8 @@ func commandHelp(cfg *config) error {
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:")
 	fmt.Println()
-	for key, value := range getCommands() {
-		fmt.Println(key, ": ", value.description)
+	for _, value := range getCommands() {
+		fmt.Println(value.name, ": ", value.description)
 	}
 	fmt.Println()
 	return nil
