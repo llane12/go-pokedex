@@ -15,10 +15,16 @@ func (c *Client) ListLocationAreas(pageURL *string) (LocationAreaListResponse, e
 	return GETRequestWithCache[LocationAreaListResponse](c, url)
 }
 
-func (c *Client) GetLocationArea(locationName *string) (LocationAreaResponse, error) {
-	url := baseURL + "/location-area/" + *locationName
+func (c *Client) GetLocationArea(locationName string) (LocationAreaResponse, error) {
+	url := baseURL + "/location-area/" + locationName
 
 	return GETRequestWithCache[LocationAreaResponse](c, url)
+}
+
+func (c *Client) GetPokemon(name string) (Pokemon, error) {
+	url := baseURL + "/pokemon/" + name
+
+	return GETRequestWithCache[Pokemon](c, url)
 }
 
 func GETRequestWithCache[T any](c *Client, url string) (T, error) {

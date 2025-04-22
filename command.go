@@ -17,6 +17,7 @@ type config struct {
 	nextPageURL   *string
 	prevPageURL   *string
 	arguments     []string
+	pokedex       map[string]pokeapi.Pokemon
 }
 
 func getCommands() map[string]cliCommand {
@@ -45,6 +46,11 @@ func getCommands() map[string]cliCommand {
 			name:        "explore <location_name>",
 			description: "Lists the Pokemon that can be enocuntered in a location area",
 			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch <pokemon_name>",
+			description: "Tries to catch the named Pokemon",
+			callback:    commandCatchPokemon,
 		},
 	}
 }
